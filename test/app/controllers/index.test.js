@@ -1,21 +1,13 @@
 const test = require('ava');
 const td = require('testdouble');
 
-const { root, fail, notFound, scoop } = require('../../../app/controllers');
+const { root, fail, notFound } = require('../../../app/controllers');
 
 test('Hello World Controller', t => {
   const res = { json: td.function() };
   root({}, res);
   t.notThrows(() =>
     td.verify(res.json({ message: 'Hello World' }))
-  );
-});
-
-test('Scoop Controller', t => {
-  const res = { json: td.function() };
-  scoop({}, res);
-  t.notThrows(() =>
-    td.verify(res.json({ message: 'Scooped You!' }))
   );
 });
 

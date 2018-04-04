@@ -1,11 +1,11 @@
 const router = require('express-promise-router')();
 
 // Controller Functions
-const { root, fail, notFound, scoop } = require('../controllers/index');
+const { root, api, fail, notFound } = require('../controllers/index');
 
 // Routes
 router.get('/', root);
-router.get('/scoop', scoop);
+router.get('/api', api);
 router.get('/fail', fail);
 
 // Fall Through Route
