@@ -19,6 +19,21 @@ To calculate the prize, the prize matrix image below is used:
 
 ![](https://raw.githubusercontent.com/autolotto/interview/master/powerball_rules.png)
 
+### Multiplier Power Rules used are
+
+  When the advertised annuity jackpot is less than or equal to the Major Jackpot Level,
+  the multiplier will be either 2X, 3X, 4X, 5X or 10X.
+
+  When the advertised annuity jackpot is greater than the Major Jackpot Level,
+  the multiplier will be either 2X, 3X, 4X or 5X.
+
+  The Major Jackpot Level is defined as "the level above which
+  Powerball drawings will no longer include a Power Play of 10X."
+  The Major Jackpot Level is currently $150,000,000.
+
+  The 10X multiplier is not available when the jackpot is above the Major Jackpot Level
+
+
 
 
 ## Installation
