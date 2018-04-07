@@ -11,6 +11,9 @@ function root(req, res) {
 function api(req, res) {
   let requestBody = req.body
   let tickets_lines = []
+
+  // convert the requested tickets into manageable arrays
+
   requestBody.forEach(function(ticket, i){
     if(ticket.hasOwnProperty("line")){
       if(ticket.line.length>1){
@@ -35,6 +38,9 @@ function api(req, res) {
       }
     }
   });
+
+  // make the call to the test end point to fetch lottery results
+
   request.get(
     'https://games.api.lottery.com/api/v2.0/results?game=59bc2b6031947b9daf338d32',
     function(err, response, body){
@@ -42,6 +48,9 @@ function api(req, res) {
       let result = JSON.parse(body)
       let intersect = _.intersection([1, 2, 3], [101, 2, 1, 10], [2, 1])
       let results_lines = []
+
+      // convert lottery results into manageable arrays
+
       result.forEach(function(ticket, i){
 
         if(ticket.hasOwnProperty("results") && ticket.results.hasOwnProperty('values')){
@@ -50,23 +59,26 @@ function api(req, res) {
             let line2 = []
             let jackpot = 0
 
-            line[0] = ticket.resultsAnnouncedAt.substr(0, 10)
+            line[0] = ticket.resultsAnnouncedAt.substr(0, 10) // result date
 
             if(ticket.prizes.values.length>0){
-              jackpot = ticket.prizes.values[0].value
+              jackpot = ticket.prizes.values[0].value // jackpot value for ticket
             }
 
             ticket.results.values.forEach(function(numbers, x){
-              if(numbers.type === 'NUMBER'){
+              if(numbers.type === 'NUMBER'){ // verify that this is a number
                 if(x < 5) {
-                  line2[x] = numbers.value
+                  line2[x] = numbers.value // white ball numbers
                 }else if(x == 5) {
                   line[1] = numbers.value // powerball
                 }else if(x == 6) {
                   line[2] = numbers.value // powerplay
                   line[3] = line2
                   results_lines.push(line)
+                  // iterate over requested tickets to match with this lottery result
                   tickets_lines.forEach(function (purchasedTicket, x) {
+
+                    // function to apply multiplier
                     let applyMultiplier = function (playMultiplier, amountWon, powerPlayValue) {
                       if (playMultiplier == true) {
                         amountWon = amountWon * powerPlayValue;
@@ -74,44 +86,32 @@ function api(req, res) {
                       return amountWon;
                     };
 
+                    // verify the dates are the same
                     if(purchasedTicket[0] == line[0]){
+
+                      // use underscore to find matching numbers based on the two arrays
+
                       let intersect = _.intersection(purchasedTicket[3], line[3])
                       let powerBall = false
-                      if(line[1] == purchasedTicket[2]){
+
+                      if(line[1] == purchasedTicket[2]){ // verify powerball
                         powerBall = true
                         purchasedTicket[4] = true
                       }else{
                         purchasedTicket[4] = false
                       }
+
+                      // if matching numbers exists then add to the tickets_lines array
                       if(intersect.length>0){
                         // add the intersection array
                         purchasedTicket[5] = intersect
                       }
-                      let playMultiplier = purchasedTicket[1]
+                      let playMultiplier = purchasedTicket[1]  // determine if multiplier purchased
                       let amountWon = 0
-                      let powerPlayValue = line[2]
-                      /*
-                          You can multiply non-jackpot prizes by 2, 3, 4, 5 or 10 times!
+                      let powerPlayValue = line[2] // value of the powerPlay in lottery results
 
-                          The 10X multiplier is only in play when the advertised jackpot annuity is $150 million or less.
+                      // determine winnings based on winning matrix
 
-                          The Match 5 prize with Power Play is always $2 million. Without it, it's $1 million.
-
-                          The multiplier does not apply to a jackpot prize.
-
-
-                          When the advertised annuity jackpot is less than or equal to the Major Jackpot Level,
-                          the multiplier will be either 2X, 3X, 4X, 5X or 10X.
-
-                          When the advertised annuity jackpot is greater than the Major Jackpot Level,
-                          the multiplier will be either 2X, 3X, 4X or 5X.
-
-                          The Major Jackpot Level is defined as "the level above which
-                          Powerball drawings will no longer include a Power Play of 10X."
-                          The Major Jackpot Level is currently $150,000,000.
-
-                          The 10X multiplier is not available when the jackpot is above the Major Jackpot Level
-                       */
                       if (powerBall == true && intersect.length == 0) {
                         amountWon = 4
                         amountWon = applyMultiplier(playMultiplier, amountWon, powerPlayValue);
@@ -151,9 +151,9 @@ function api(req, res) {
                         amountWon = applyMultiplier(playMultiplier, amountWon, powerPlayValue);
                       }
 
-                      purchasedTicket[6] = amountWon
+                      purchasedTicket[6] = amountWon // assign amount won to this ticket
 
-                      totalAmountWon += amountWon
+                      totalAmountWon += amountWon // sum total amount won
                     }
                   })
                   line2 = null
