@@ -139,6 +139,8 @@ with a REQUEST LIKE:
     }
     ]
 
+#### Your local end point to use is
+
 `http://localhost:3000/api`
 
 You should see something like this: 
