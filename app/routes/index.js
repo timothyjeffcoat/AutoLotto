@@ -5,7 +5,7 @@ const { root, api, fail, notFound } = require('../controllers/index');
 
 // Routes
 router.get('/', root);
-router.get('/api', api);
+router.post('/api', api);
 router.get('/fail', fail);
 
 // Fall Through Route
