@@ -1,40 +1,25 @@
-# Interview Exercise
 
-Your goal is to extend the functionality of this Node.js lottery service. 
+# AutoLotto from lottery.com exercise
 
-Powerball is a popular US lottery game with draws twice a week.  For the purposes of this exercise, a Powerball lottery "ticket" includes one or more "picks".  Each "pick" is a set of 5 integers (from `1`-`69`) along with a 6th integer (the _Powerball_, from `1`-`26`) that the user has chosen to play during a specific draw. 
+## Description
+
+Powerball is a popular US lottery game with draws twice a week.  For the purposes of this exercise, a Powerball lottery "ticket" includes one or more "picks".  Each "pick" is a set of 5 integers (from `1`-`69`) along with a 6th integer (the _Powerball_, from `1`-`26`) that the user has chosen to play during a specific draw.
 
 For example, a pick for the draw on `2017-11-09` might be: 
 
 `02 14 19 21 61` `25`
 
-Your application's API will accept data for a lottery ticket, and respond with whether each pick has won, the prize won per-pick, and the total of all prizes won on the ticket.  It is up to you to design and build this API. 
+The application's API accepts data for a lottery ticket, and respond with whether each pick has won, the prize won per-pick, and the total of all prizes won on the ticket.
 
-The Powerball winning numbers change on each "draw date". In order to determine a win or a loss, your application will have to retrieve the Powerball draw dates and winning numbers from the following URL: 
+The test end point used is:
 
 https://games.api.lottery.com/api/v2.0/results?game=59bc2b6031947b9daf338d32
 
-To calculate the prize, consult the prize matrix image below: 
+To calculate the prize, the prize matrix image below is used:
 
 ![](https://raw.githubusercontent.com/autolotto/interview/master/powerball_rules.png)
 
 
-
-## Exercise Rules
-
-- There is no time limit to this challenge.
-- Use your best discretion with the design and requirements, but you can ask questions.
-- You must use JavaScript and must extend this code-base. 
-- There is no need for a UI to solve this problem. 
-- Follow modern JavaScript and Node best practices and conventions to the best of your ability.
-- You are free to add packages, tools or improvements to your project as you see fit.
-- You must submit your code via a GitHub repository. 
-- We expect you to write the kind of feature you would put into production, including tests and documentation as you see fit.
-
-
-## Download
-
-To checkout the source, you should clone it from github! 
 
 ## Installation
 
@@ -62,15 +47,130 @@ node index.js
 App listening on port 3000
 ```
 
-You can then hit the default endpoint: 
+You can then hit the endpoint with POST:
 
-`http://localhost:3000/`
+with a REQUEST LIKE:
+
+# Example REQUEST
+
+    [
+        {
+        "message": "2 Win the Lotto!",
+        "game": "powerball",
+        "gameDate": "2018-04-01",
+        "powerPlay": true,
+        "line": [
+            {
+              "value": "8",
+              "type": "NUMBER"
+            },
+            {
+              "value": "4",
+              "type": "NUMBER"
+            },
+            {
+              "value": "2",
+              "type": "NUMBER"
+            },
+            {
+              "value": "5",
+              "type": "NUMBER"
+            },
+            {
+              "value": "1",
+              "type": "NUMBER"
+            },
+            {
+              "value": "71",
+              "type": "NUMBER",
+              "name": "Powerball",
+              "category": "EXTRA"
+            }
+          ]
+    },
+    {
+        "message": "Win the Lotto!",
+        "game": "powerball",
+        "gameDate": "2018-04-01",
+        "powerPlay": false,
+        "line": [
+            {
+              "value": "8",
+              "type": "NUMBER"
+            },
+            {
+              "value": "24",
+              "type": "NUMBER"
+            },
+            {
+              "value": "52",
+              "type": "NUMBER"
+            },
+            {
+              "value": "55",
+              "type": "NUMBER"
+            },
+            {
+              "value": "61",
+              "type": "NUMBER"
+            },
+            {
+              "value": "21",
+              "type": "NUMBER",
+              "name": "Powerball",
+              "category": "EXTRA"
+            }
+          ]
+    }
+    ]
+
+`http://localhost:3000/api`
 
 You should see something like this: 
 
 ```json
 {
-  "messsage": "Hello World"
+    "totalAmountWon": 50000000,
+    "results": [
+        {
+            "date": "2018-04-01",
+            "powerPlay": true,
+            "powerBall": "71",
+            "originalWhites": [
+                "8",
+                "4",
+                "2",
+                "5",
+                "1"
+            ],
+            "matchedPowerBall": false,
+            "matchingNumbers": [
+                "8"
+            ],
+            "amountWon": 0
+        },
+        {
+            "date": "2018-04-01",
+            "powerPlay": false,
+            "powerBall": "21",
+            "originalWhites": [
+                "8",
+                "24",
+                "52",
+                "55",
+                "61"
+            ],
+            "matchedPowerBall": true,
+            "matchingNumbers": [
+                "8",
+                "24",
+                "52",
+                "55",
+                "61"
+            ],
+            "amountWon": 50000000
+        }
+    ]
 }
 ```
 
@@ -99,14 +199,6 @@ You should see output like this:
   9 tests passed
   
 ```
-
-## Contact
-
-We encourage you to use your best discretion, but also to ask questions and communicate if you need it.  
-
-If you have questions during the interview, call your HR or Engineering contact or send a message to: 
-
-- [engineering@lottery.com](mailto:engineering@lottery.com)
 
 
 
