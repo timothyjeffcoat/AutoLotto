@@ -86,6 +86,17 @@ function api(req, res) {
                         if powerBall = false and intersect.length = 4 then win $100
                         if powerBall = false and intersect.length = 3 then win $7
 
+                        if powerPlay = true (purchasedTicket[1]) then multiply winnings by powerPlay Value line[2]
+                          The 10X multiplier is only in play when the advertised jackpot annuity is $150 million or less.
+
+                          The Match 5 prize with Power Play is always $2 million. Without it, it's $1 million.
+
+                          The multiplier does not apply to a jackpot prize.
+
+
+
+
+
                         Update each of the tickets_lines records with fields for
                         1. Respond with whether each pick has won
                         2. The prize won per-pick
